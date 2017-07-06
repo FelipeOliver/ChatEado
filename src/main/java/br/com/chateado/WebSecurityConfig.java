@@ -1,4 +1,4 @@
-package br.com.tdv;
+package br.com.chateado;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

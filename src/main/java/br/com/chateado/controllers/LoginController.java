@@ -1,4 +1,4 @@
-package br.com.tdv.controllers;
+package br.com.chateado.controllers;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import br.com.tdv.entities.Usuario;
-import br.com.tdv.repositories.UsuarioDao;
+import br.com.chateado.entities.Usuario;
+import br.com.chateado.repositories.UsuarioDao;
 
 @Controller
 @CrossOrigin

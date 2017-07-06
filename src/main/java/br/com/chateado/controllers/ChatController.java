@@ -1,4 +1,4 @@
-package br.com.tdv.controllers;
+package br.com.chateado.controllers;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.tdv.entities.Message;
-import br.com.tdv.entities.Usuario;
-import br.com.tdv.repositories.UsuarioDao;
-import br.com.tdv.services.ConversaService;
+import br.com.chateado.entities.Message;
+import br.com.chateado.entities.Usuario;
+import br.com.chateado.repositories.UsuarioDao;
+import br.com.chateado.services.ConversaService;
 
 @Controller
 @CrossOrigin

@@ -1,1 +1,1 @@
-var app = angular.module('ChatTDVApp', []);
+var app = angular.module('ChatEadoApp', []);

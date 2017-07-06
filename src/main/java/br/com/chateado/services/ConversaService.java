@@ -1,4 +1,4 @@
-package br.com.tdv.services;
+package br.com.chateado.services;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.tdv.entities.Conversa;
-import br.com.tdv.entities.Message;
-import br.com.tdv.repositories.ConversaRepository;
+import br.com.chateado.entities.Conversa;
+import br.com.chateado.entities.Message;
+import br.com.chateado.repositories.ConversaRepository;
 
 @Service
 public class ConversaService {

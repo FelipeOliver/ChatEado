@@ -1186,7 +1186,7 @@ a.text-danger:hover {
   color: #843534;
 }
 /******************************************
- * Customização TDV do Template
+ * Customização chateado do Template
  ******************************************/
 .margin-b-5{
 	margin-bottom: 5px !important;
@@ -1197,18 +1197,18 @@ a.text-danger:hover {
 .margin-b-0{
 	margin-bottom: 0px !important;
 }
-.bg-laranja-tdv{
+.bg-laranja-chateado{
 	background-color: #FF7F00 !important; 
 	color: white;
 }
-.bg-azul-tdv{
+.bg-azul-chateado{
 	background-color: #0089B2 !important; 
 	color: white;
 }
-.bg-branco-tdv{
+.bg-branco-chateado{
 	background-color: #F6F6F6 !important;
 }
-.bg-cinza-tdv{
+.bg-cinza-chateado{
 	background-color: #e9e9e9 !important;
 }
 .bg-body-cinza{
@@ -2541,7 +2541,7 @@ fieldset[disabled] .checkbox label {
   padding-left: 0;
 }
 
-.input-xs-tdv {
+.input-xs-chateado {
   height: 22px;
   padding: 1px 5px;
   font-size: 12px;

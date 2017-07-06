@@ -1,9 +1,9 @@
-package br.com.tdv.repositories;
+package br.com.chateado.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.tdv.entities.Usuario;
+import br.com.chateado.entities.Usuario;
 
 public class UsuarioDao {
 

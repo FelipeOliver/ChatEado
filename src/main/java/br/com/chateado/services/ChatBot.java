@@ -1,6 +1,6 @@
-package br.com.tdv.services;
+package br.com.chateado.services;
 
-import br.com.tdv.entities.Message;
+import br.com.chateado.entities.Message;
 
 public class ChatBot {
 

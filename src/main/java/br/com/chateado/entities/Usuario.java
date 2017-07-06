@@ -1,4 +1,4 @@
-package br.com.tdv.entities;
+package br.com.chateado.entities;
 
 public class Usuario {
 	
