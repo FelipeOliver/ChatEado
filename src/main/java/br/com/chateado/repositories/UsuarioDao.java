@@ -14,10 +14,6 @@ public class UsuarioDao {
 
 	public static final List<Usuario> usuarios = Arrays.asList(new Usuario("fbispo", Base64Helper.encodeToken("123456"), "N"), new Usuario("foliver", Base64Helper.encodeToken("654321"), "N"));
 
-//	public static List<Usuario> getListUsuario() {
-//		return Arrays.asList(new Usuario("fbispo", Base64Helper.encodeToken("123456"), "N"), new Usuario("foliver", Base64Helper.encodeToken("654321"), "N"));
-//	}
-
 	public boolean existsByCodigoAndSenha(Usuario usuario) {
 		boolean valido = false;
 		Usuario u = findUser(usuario);

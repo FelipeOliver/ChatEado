@@ -8,14 +8,15 @@ app.controller('ChatController', ['$scope', '$http',
 	self.conversasAtivas = [{'desc':'Sala 1', 'id':1}, {'desc':'Sala 2', 'id':2}];
 	
 	self.connectChat = function() {
-		if( self.user.codigo == undefined || self.user.codigo == null || self.user.codigo == ''){
+		if( self.userInput.codigo == undefined || self.userInput.codigo == null || self.userInput.codigo == ''){
 			alert('Informe um código de usuário');
 			return;
 		}
-		if( self.user.senha == undefined || self.user.senha == null || self.user.senha == ''){
+		if( self.userInput.senha == undefined || self.userInput.senha == null || self.userInput.senha == ''){
 			alert('Informe uma senha para o usuário');
 			return;
 		}
+		self.user = Object.assign({}, self.userInput);
 		self.user.senha = btoa(self.user.senha);
 		self.user.idConversa = self.idConversa;
 		$http.post('/chat/login', self.user)
@@ -88,10 +89,21 @@ app.controller('ChatController', ['$scope', '$http',
 	}
 	
 	self.setConversation = function(conv){
-		console.log(conv);
+		if (stompClient != null) {
+	        stompClient.disconnect();
+	    }
 		self.idConversa = conv;
-		self.desconnectChat();
-		self.connectChat();
+	    $http.post('/chat/login/logout', self.user)
+    	.then(function(resp){
+    		self.setUsuariosList("{}");
+    		self.setMessages("{}");
+    		self.setConnected(false);
+    		console.log("Disconnected");
+    		console.log(conv);
+    		self.connectChat();
+    	}, function(e){
+    		console.log(e);
+    	})
 	}
 	
 	self.getMessages = function(id){
@@ -187,12 +199,14 @@ app.controller('ChatController', ['$scope', '$http',
 		        	window.focus();
 		        	notification.close();
 		        }
-		    });	    	
+		    });	    		
 	    }		
 	}
 	
 	self._initUser = function(u){
-		self.user = u;
+		self.user = Object.assign({}, u);
+		self.userInput = u;
+		self.userInput.senha = atoa(self.userInput.senha);
 		self.reconnectChat();
 	}
 	

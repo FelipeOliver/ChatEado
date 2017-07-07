@@ -1,5 +1,6 @@
 package br.com.chateado.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,10 @@ public class LoginController {
 	private SimpMessagingTemplate template;
 	
 	@RequestMapping(value="/login", method=RequestMethod.POST)
-	public ResponseEntity<String> setSession(@RequestBody Usuario usuario, HttpSession session){
+	public ResponseEntity<String> setSession(@RequestBody Usuario usuario, HttpSession session, HttpServletRequest request){
 		System.out.println("Usuário "+ usuario.getCodigo()+ " com a senha " + usuario.getSenha());
 		boolean valid = usuarioService.validaUsuario(usuario);
+		session = session == null ? request.getSession() : session;
 		if(valid){
 			usuarioService.setStatusUsuario(usuario, "S", usuario.getIdConversa());
 //			usuario.setSenha("");

@@ -66,8 +66,8 @@
 			<div class="panel-footer">
 				<input class="form-control hidden" data-ng-model="cc.idConversa" data-ng-disabled="cc.isConnected" />
 				<div class="input-group">
-					<input class="form-control" data-ng-model="cc.user.codigo" data-ng-disabled="cc.isConnected" />
-					<input type="password" class="form-control" data-ng-model="cc.user.senha" data-ng-disabled="cc.isConnected" />
+					<input class="form-control" data-ng-model="cc.userInput.codigo" data-ng-disabled="cc.isConnected" />
+					<input type="password" class="form-control" data-ng-model="cc.userInput.senha" data-ng-disabled="cc.isConnected" />
 					<div class="input-group-btn">
 						<button class="btn btn-success" data-ng-disabled="!(!cc.isConnected || cc.user == null || cc.user == undefined || cc.user == '')" 
 								data-ng-click="cc.connectChat()">
