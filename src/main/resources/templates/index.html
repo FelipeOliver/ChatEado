@@ -1,92 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" data-ng-app="ChatEadoApp">
+	
 	<head>
+		<title>ChatEado</title>
+		<!-- Icon of the page -->
+		<link href="../static/css/img/messages5.png" rel="shortcut icon" th:href="@{/css/img/messages5.png}"></link>
+
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0"></meta>
 		<meta name="apple-mobile-web-app-capable" content="yes"></meta>
 		<meta name="apple-mobile-web-app-status-bar-style" content="black"></meta>
-		<title>ChatEado</title>
-		<link href="../static/css/img/messages5.png" rel="shortcut icon" th:href="@{/css/img/messages5.png}"></link>
+		
+		<!-- No Cacheable -->
+		<meta http-equiv="cache-control" content="max-age=0" />
+		<meta http-equiv="cache-control" content="no-cache" />
+		<meta http-equiv="expires" content="0" />
+		<meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+		<meta http-equiv="pragma" content="no-cache" />
+		
+		<!-- Stylesheet -->
 		<link href="../static/lib/bootstrap/css/bootstrap.css" rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" ></link>
 	</head>
-	<body data-ng-controller="ChatController as cc" style="margin: 5px">
-		<div class="panel panel-default col-md-6 col-md-offset-3 col-xs-12" style="margin-bottom: 0px">
-			<div class="panel-head">
-				<ul class="nav nav-tabs">
-  					<li role="" data-ng-repeat="conv in cc.conversasAtivas" 
-  						 data-ng-class="cc.idConversa == conv.id ? 'active' : ''">
-  						<a data-ng-click="cc.setConversation(conv.id)"> {{ conv.desc }} </a>
-  					</li>
-					<li class="pull-right" data-ng-show="cc.idConversa">
-						<button data-ng-click="cc.closeConversation(cc.idConversa)" type="button" class="close text-danger">
-							<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-						</button>
-					</li>
-				</ul>
-			</div>
-			<div class="panel-body">
-				<div id="scrollMessages" style="overflow-y: auto;overflow-x: hidden;height: 250px;border: solid 2px; border-color: rgb(186, 210, 234); border-bottom: none;">
-					<div class="row" data-ng-repeat="me in cc.messages">
-						<div class="col-xs-12" style="margin: 5px;">
-							<div data-ng-show="me.usuario != cc.user">
-								<b style="color:rgb(4, 142, 219)"> {{me.usuario}} </b>
-								<br />
-								<div style="background-color: rgb(199, 237, 252);color: black;border: solid 1px;border-color:rgb(199, 237, 252);border-radius: 1px; margin-right: 45px">
-									<div class="row" style="padding: 5px;word-break: break-word;">
-										{{me.corpo}}							
-									</div>
-									<br />
-									<div class="row text-right" style="padding-right: 5px">
-										<small style="margin-bottom: 0px;color: rgb(102, 116, 156);">{{me.dataEnvio}}</small>
-									</div>
-								</div>
-							</div>
-							<div data-ng-show="me.usuario == cc.user">
-								<div style="background-color: rgb(230, 233, 237);color: black;border: solid 1px;border-color:white;border-radius: 1px; margin-left: 45px; margin-right: 5px">
-									<div class="row" style="padding: 5px;word-break: break-word;">
-										{{me.corpo}}							
-									</div>
-									<br />
-									<div class="row text-right" style="padding-right: 5px">
-										<small style="margin-bottom: 0px;color:rgb(102, 116, 156);">{{me.dataEnvio}}</small>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="input-group">
-					<input class="form-control" data-ng-model="cc.textSend"
-						   data-ng-keypress="cc.enterSendMessage($event, cc.textSend)"/>
-					<div class="input-group-btn">
-						<button class="btn btn-default" data-ng-disabled="!cc.isConnected" 
-								data-ng-click="cc.sendMessage(cc.textSend)">
-							>>
-						</button>
-					</div>
-				</div>
-				<br/><br/><br/>
-			</div>
-			<div class="panel-footer">
-				<input class="form-control hidden" data-ng-model="cc.idConversa" data-ng-disabled="cc.isConnected" />
-				<div class="input-group">
-					<input class="form-control" data-ng-model="cc.user" data-ng-disabled="cc.isConnected" />
-					<div class="input-group-btn">
-						<button class="btn btn-success" data-ng-disabled="!(!cc.isConnected || cc.user == null || cc.user == undefined || cc.user == '')" 
-								data-ng-click="cc.connectChat()">
-							Connect
-						</button>
-					</div>
-					<div class="input-group-btn">
-						<button class="btn btn-danger" data-ng-disabled="!cc.isConnected" 
-								data-ng-click="cc.desconnectChat()">
-							Desconnect
-						</button>
-					</div>
-				</div>
-			</div>
+	
+	<body style="margin: 5px">
+	
+		<div th:if="${content_page}">
+			<div th:include="${content_page}"></div>
 		</div>
-
+		
 	</body>
 	
 	<script src="../static/lib/bootstrap/js/jquery.min.1.11.1.js" th:src="@{/lib/bootstrap/js/jquery.min.1.11.1.js}" > </script>

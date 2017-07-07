@@ -48,10 +48,12 @@ public class ChatController {
 		return listMessage;
 	}
 
-	@MessageMapping(value="/usuario/change/status")
-	@SendTo(value="/server/usuariolist")
-	public List<Usuario> changeStatus(){
-		return UsuarioDao.usuarios;
+	@MessageMapping(value="/usuario/change/status/{idConversa}")
+	@SendTo(value="/server/usuariolist/{idConversa}")
+	public List<Usuario> changeStatus(@DestinationVariable Long idConversa){
+		System.out.println("Passou aqui");
+		List<Usuario> listUsuario = UsuarioDao.findListByIdConversa(idConversa);
+		return listUsuario;
 	}
 	
 	@RequestMapping(value="/conversa/{id}/findall")

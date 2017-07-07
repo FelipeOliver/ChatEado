@@ -8,28 +8,59 @@ app.controller('ChatController', ['$scope', '$http',
 	self.conversasAtivas = [{'desc':'Sala 1', 'id':1}, {'desc':'Sala 2', 'id':2}];
 	
 	self.connectChat = function() {
-		if( self.user == undefined || self.user == null || self.user == ''){
-			alert('Informe um usuário');
+		if( self.user.codigo == undefined || self.user.codigo == null || self.user.codigo == ''){
+			alert('Informe um código de usuário');
 			return;
 		}
-	    var socket = new SockJS('/chat/chat');
-	    stompClient = Stomp.over(socket);
+		if( self.user.senha == undefined || self.user.senha == null || self.user.senha == ''){
+			alert('Informe uma senha para o usuário');
+			return;
+		}
+		self.user.senha = btoa(self.user.senha);
+		self.user.idConversa = self.idConversa;
+		$http.post('/chat/login', self.user)
+    	.then(function(resp){
+    		var socket = new SockJS('/chat/chat');
+    		stompClient = Stomp.over(socket);
+    		self.setConnected(true);
+    	    stompClient.connect({}, function (frame) {
+    	    	stompClient.subscribe('/server/sendmessage/' + self.idConversa, function (greeting) {
+    	    		console.log(greeting);
+    	    		self.setMessages(JSON.parse(greeting.body));
+    	    	});
+    	    	stompClient.subscribe('/server/usuariolist/' + self.idConversa, function (list) {
+    	    		self.setUsuariosList(list.body);
+    	    	});
+    	    	stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
+    	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
+    	    	.then(function(resp){
+    	    		console.log(resp);
+    	    		self.setMessages(resp.data);
+    	    	}, function(e){
+    	    		console.log(e);
+    	    	})
+    	    	console.log('Connected: ' + frame);
+    	    });
+    	}, function(e){
+    		console.log(e);
+    		alert("O usuário não foi autenticado!");
+    	})
+
+	}
+	
+	self.reconnectChat = function(){
+		var socket = new SockJS('/chat/chat');
+		stompClient = Stomp.over(socket);
+		self.setConnected(true);
 	    stompClient.connect({}, function (frame) {
-	    	$http.get('/chat/login/' + self.user)
-	    	.then(function(resp){
-	    		self.setConnected(true);
-	    		console.log('Connected: ' + frame);
-	    	}, function(e){
-	    		console.log(e);
-	    	})
 	    	stompClient.subscribe('/server/sendmessage/' + self.idConversa, function (greeting) {
 	    		console.log(greeting);
 	    		self.setMessages(JSON.parse(greeting.body));
 	    	});
-	    	stompClient.subscribe('/server/usuariolist', function (list) {
+	    	stompClient.subscribe('/server/usuariolist/' + self.idConversa, function (list) {
 	    		self.setUsuariosList(list.body);
 	    	});
-	    	stompClient.send( "/app/usuario/change/status", {}, {})
+	    	stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
 	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
 	    	.then(function(resp){
 	    		console.log(resp);
@@ -37,6 +68,7 @@ app.controller('ChatController', ['$scope', '$http',
 	    	}, function(e){
 	    		console.log(e);
 	    	})
+	    	console.log('Connected: ' + frame);		
 	    });
 	}
 	
@@ -67,40 +99,53 @@ app.controller('ChatController', ['$scope', '$http',
 	}
 	
 	self.setMessages = function(messages){
-//		var mensagem = JSON.parse(messages);
-//		self.messages.push(mensagem);
-		self.messages = messages;
-		$scope.$apply();
-		var mensagem = self.messages[self.messages.length - 1];    
-		var height = $("#scrollMessages")[0].scrollHeight;
-		$("#scrollMessages")[0].scrollTop = height;
-		
-		if(mensagem != null && mensagem != undefined && mensagem != ''){
-			if($.trim(mensagem.usuario) != $.trim(self.user)){
-				self.sendNotification(mensagem.usuario, mensagem.corpo);
+		if(messages != null && messages != undefined && messages != "{}" && messages != ""){
+			self.messages = messages;
+			var mensagem = self.messages[self.messages.length - 1];    
+			var height = $("#scrollMessages")[0].scrollHeight;
+			$("#scrollMessages")[0].scrollTop = height;
+			
+			if(mensagem != null && mensagem != undefined && mensagem != ''){
+				if($.trim(mensagem.usuario) != $.trim(self.user.codigo)){
+					self.sendNotification(mensagem.usuario, mensagem.corpo);
+				}
 			}
+			$scope.$apply();
+		}else{
+			self.messages = [];
 		}
 	}
 	
 	self.setUsuariosList = function(list){
-		self.usersOn = JSON.parse(list);
-		$scope.$apply();
-		console.log(self.usersOn);
+		if(list != null && list != undefined && list != "{}" && list != ""){
+			console.log(list);
+			self.usersOn = JSON.parse(list);
+			$scope.$apply();
+		}else{
+			self.usersOn = [];
+		}
 	}
 	
 	self.desconnectChat = function() {
 	    if (stompClient != null) {
 	        stompClient.disconnect();
 	    }
-	    self.setConnected(false);
-	    console.log("Disconnected");
+	    $http.post('/chat/login/logout', self.user)
+    	.then(function(resp){
+    		self.setUsuariosList("{}");
+    		self.setMessages("{}");
+    		self.setConnected(false);
+    		console.log("Disconnected");
+    	}, function(e){
+    		console.log(e);
+    	})
 	}
 	
 	self.sendMessage = function(corpo) {
 		if(corpo == null || corpo == '' || corpo == undefined){
 			return;
 		}
-	    stompClient.send( "/app/message/" + self.idConversa, {}, JSON.stringify({'corpo': corpo, 'usuario':self.user }));
+	    stompClient.send( "/app/message/" + self.idConversa, {}, JSON.stringify({'corpo': corpo, 'usuario':self.user.codigo }));
 	    self.textSend = "";
 	}
 	
@@ -144,6 +189,11 @@ app.controller('ChatController', ['$scope', '$http',
 		        }
 		    });	    	
 	    }		
+	}
+	
+	self._initUser = function(u){
+		self.user = u;
+		self.reconnectChat();
 	}
 	
 //	Notification.requestPermission();
