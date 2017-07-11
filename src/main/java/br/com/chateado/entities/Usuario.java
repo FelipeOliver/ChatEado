@@ -1,18 +1,20 @@
 package br.com.chateado.entities;
 
+import java.util.List;
+
 public class Usuario {
 	
 	private String codigo;
 	private String senha;
 	private boolean status;
 	private Long idConversa;
+	private List<Conexao> conexoes;
 	
 	public Usuario(String codigo, String senha, String status) {
 		this.setCodigo(codigo);
 		this.setSenha(senha);
 		this.setStatusString(status);
 	}
-	
 	public Usuario(){
 		
 	}
@@ -43,7 +45,13 @@ public class Usuario {
 	public void setIdConversa(Long idConversa) {
 		this.idConversa = idConversa;
 	}
-
+	public List<Conexao> getConexoes() {
+		return conexoes;
+	}
+	public void setConexoes(List<Conexao> conexoes) {
+		this.conexoes = conexoes;
+	}
+	
 	@Override
 	public String toString() {
 		return "Usuario [codigo=" + codigo + ", status=" + status + "]";

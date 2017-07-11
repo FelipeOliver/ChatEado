@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import br.com.chateado.entities.Message;
 import br.com.chateado.entities.Usuario;
 import br.com.chateado.repositories.UsuarioDao;
+import br.com.chateado.services.ChatBot;
 import br.com.chateado.services.ConversaService;
 
 @Controller
@@ -28,6 +29,8 @@ public class ChatController {
 	
 	@Autowired
 	private ConversaService conversaService;
+	@Autowired
+	private ChatBot chatBot;
 	
 	@MessageMapping(value="/message")
 	@SendTo(value="/server/sendmessage")
@@ -44,7 +47,8 @@ public class ChatController {
 		Calendar hoje = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		message.setDataEnvio(sdf.format(hoje.getTime()));
-		List<Message> listMessage = conversaService.addMensagem(idConversa, message);
+		Message analiseMensagem = chatBot.analiseMensagem(message);
+		List<Message> listMessage = conversaService.addMensagem(idConversa, analiseMensagem);
 		return listMessage;
 	}
 

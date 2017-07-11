@@ -206,7 +206,7 @@ app.controller('ChatController', ['$scope', '$http',
 	self._initUser = function(u){
 		self.user = Object.assign({}, u);
 		self.userInput = u;
-		self.userInput.senha = atoa(self.userInput.senha);
+		self.userInput.senha = atob(self.userInput.senha);
 		self.reconnectChat();
 	}
 	

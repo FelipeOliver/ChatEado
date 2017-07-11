@@ -24,7 +24,7 @@
 				<div id="scrollMessages" style="overflow-y: auto;overflow-x: hidden;height: 250px;border: solid 2px; border-color: rgb(186, 210, 234); border-bottom: none;">
 					<div class="row" data-ng-repeat="me in cc.messages">
 						<div class="col-xs-12" style="margin: 5px;">
-							<div data-ng-show="me.usuario != cc.user.codigo">
+							<div data-ng-if="!(me.usuario == cc.user.codigo || me.usuario == 'ChatEadoBot')">
 								<b style="color:rgb(4, 142, 219)"> {{me.usuario}} </b>
 								<br />
 								<div style="background-color: rgb(199, 237, 252);color: black;border: solid 1px;border-color:rgb(199, 237, 252);border-radius: 1px; margin-right: 45px">
@@ -37,10 +37,23 @@
 									</div>
 								</div>
 							</div>
-							<div data-ng-show="me.usuario == cc.user.codigo">
+							<div data-ng-if="me.usuario == cc.user.codigo">
 								<div style="background-color: rgb(230, 233, 237);color: black;border: solid 1px;border-color:white;border-radius: 1px; margin-left: 45px; margin-right: 5px">
 									<div class="row" style="padding: 5px;word-break: break-word;">
 										{{me.corpo}}							
+									</div>
+									<br />
+									<div class="row text-right" style="padding-right: 5px">
+										<small style="margin-bottom: 0px;color:rgb(102, 116, 156);">{{me.dataEnvio}}</small>
+									</div>
+								</div>
+							</div>
+							<div data-ng-if="me.usuario == 'ChatEadoBot'">
+								<b style="color:rgb(4, 142, 219)"> {{me.usuario}} </b>
+								<br />
+								<div style="background-color: rgb(230, 233, 237);color: black;border: solid 1px;border-color:white;border-radius: 1px; margin-right: 45px">
+									<div class="row" style="padding: 5px;word-break: break-word;">
+										<span data-ng-bind="me.corpo"></span>							
 									</div>
 									<br />
 									<div class="row text-right" style="padding-right: 5px">
@@ -84,8 +97,8 @@
 			</div>
 		</div>
 		<div  class="panel panel-default col-md-2 col-xs-12" >
-			<div class="panel-head">
-				<h3>Users</h3>
+			<div class="panel-head text-center">
+				<span class="">Users</span>
 			</div>
 			<div class="panel-body">
 				<ul>
@@ -94,6 +107,17 @@
 					</li>
 				</ul>
 			</div>
+			<hr></hr>
+			<div class="panel-head text-center">
+				<span class="">Conversas</span>
+			</div>
+			<div class="panel-body">
+				<ul>
+					<li data-ng-repeat="conv in cc.conversasAtivas">
+						<span data-ng-bind="conv.desc"></span>
+					</li>
+				</ul>
+			</div>			
 		</div>
 	</div>
 </html>
