@@ -114,7 +114,7 @@
 			<div class="panel-body">
 				<ul>
 					<li data-ng-repeat="conv in cc.conversasAtivas">
-						<span data-ng-bind="conv.desc"></span>
+						<a data-ng-click="cc.setConversation(conv.id)"><span data-ng-bind="conv.desc"></span></a>
 					</li>
 				</ul>
 			</div>			

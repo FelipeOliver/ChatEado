@@ -34,8 +34,8 @@ public class ChatBot {
 				if(strings[i].equalsIgnoreCase("#Help")){
 					mensagemRetorno.setCorpo(mensagemRetorno.getCorpo() + "\n " + 
 											" Os comandos existentes são: "
-										  + " \n\t* #OlaMundo: devole um 'Olá seu_nome' "
-										  + " \n\t* #OlaAlguem nome: devole um 'Olá nome_passado' ");
+										  + " \n\t * #OlaMundo: devole um 'Olá seu_nome' "
+										  + " \n\t * #OlaAlguem nome: devole um 'Olá nome_passado' ");
 					haveCommand = true;
 				}
 			}
