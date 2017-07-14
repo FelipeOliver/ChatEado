@@ -6,6 +6,7 @@
 				<div th:attr="ng-init='cc._initUser(' + ${#httpSession.getAttribute('usuario')} + ')'"></div>
 			</div>
 		</div>
+		<a th:href="@{/login}">Logout</a>
 		<div class="panel panel-default col-md-6 col-md-offset-3 col-xs-12" style="margin-bottom: 0px">
 			<div class="panel-head">
 				<ul class="nav nav-tabs">
@@ -24,7 +25,7 @@
 				<div id="scrollMessages" style="overflow-y: auto;overflow-x: hidden;height: 250px;border: solid 2px; border-color: rgb(186, 210, 234); border-bottom: none;">
 					<div class="row" data-ng-repeat="me in cc.messages">
 						<div class="col-xs-12" style="margin: 5px;">
-							<div data-ng-if="!(me.usuario == cc.user.codigo || me.usuario == 'ChatEadoBot')">
+							<div data-ng-if="!(me.usuario == cc.user.username || me.usuario == 'ChatEadoBot')">
 								<b style="color:rgb(4, 142, 219)"> {{me.usuario}} </b>
 								<br />
 								<div style="background-color: rgb(199, 237, 252);color: black;border: solid 1px;border-color:rgb(199, 237, 252);border-radius: 1px; margin-right: 45px">
@@ -37,7 +38,7 @@
 									</div>
 								</div>
 							</div>
-							<div data-ng-if="me.usuario == cc.user.codigo">
+							<div data-ng-if="me.usuario == cc.user.username">
 								<div style="background-color: rgb(230, 233, 237);color: black;border: solid 1px;border-color:white;border-radius: 1px; margin-left: 45px; margin-right: 5px">
 									<div class="row" style="padding: 5px;word-break: break-word;">
 										{{me.corpo}}							
@@ -76,11 +77,11 @@
 				</div>
 				<br/><br/><br/>
 			</div>
-			<div class="panel-footer">
+			<div class="panel-footer" hidden="hidden">
 				<input class="form-control hidden" data-ng-model="cc.idConversa" data-ng-disabled="cc.isConnected" />
 				<div class="input-group">
-					<input class="form-control" data-ng-model="cc.userInput.codigo" data-ng-disabled="cc.isConnected" />
-					<input type="password" class="form-control" data-ng-model="cc.userInput.senha" data-ng-disabled="cc.isConnected" />
+					<input class="form-control" data-ng-model="cc.user.username" data-ng-disabled="cc.isConnected" />
+					<input type="password" class="form-control" data-ng-model="cc.user.password" data-ng-disabled="cc.isConnected" />
 					<div class="input-group-btn">
 						<button class="btn btn-success" data-ng-disabled="!(!cc.isConnected || cc.user == null || cc.user == undefined || cc.user == '')" 
 								data-ng-click="cc.connectChat()">
@@ -103,7 +104,7 @@
 			<div class="panel-body">
 				<ul>
 					<li data-ng-repeat="uo in cc.usersOn">
-						<span data-ng-bind="uo.codigo"></span> <span data-ng-bind="uo.status ? 'On' : 'Off'"></span>
+						<span data-ng-bind="uo.username"></span> <span data-ng-bind="uo.status ? 'On' : 'Off'"></span>
 					</li>
 				</ul>
 			</div>

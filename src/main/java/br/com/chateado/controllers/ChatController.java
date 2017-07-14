@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import br.com.chateado.entities.Usuario;
 import br.com.chateado.repositories.UsuarioDao;
 import br.com.chateado.services.ChatBot;
 import br.com.chateado.services.ConversaService;
+import br.com.chateado.services.UsuarioService;
 
 @Controller
 @CrossOrigin
@@ -29,6 +32,8 @@ public class ChatController {
 	
 	@Autowired
 	private ConversaService conversaService;
+	@Autowired
+	private UsuarioService usuarioService;
 	@Autowired
 	private ChatBot chatBot;
 	
@@ -65,6 +70,19 @@ public class ChatController {
 		try {
 			List<Message> list = this.conversaService.findListOfMessages(conversa);
 			return new ResponseEntity<String>(new ObjectMapper().writeValueAsString(list ),HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value="/conversa/entrar/{id}/{user}")
+	public ResponseEntity<String> entrarNaConversa(@PathVariable("id") Long conversa, @PathVariable("user") String userName, HttpSession session){
+		try {
+			usuarioService.setStatusUsuario(userName, "S", conversa);
+			Usuario usuario = (Usuario) session.getAttribute("usuarioObject");
+			session.setAttribute("usuario", new ObjectMapper().writeValueAsString(usuario));
+			return new ResponseEntity<String>( HttpStatus.OK );
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);

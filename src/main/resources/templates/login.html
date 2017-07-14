@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Faça seu Login para continuar</title>
+		<!-- Stylesheet -->
+		<link href="../static/lib/bootstrap/css/bootstrap.css" rel="stylesheet" th:href="@{/lib/bootstrap/css/bootstrap.css}" ></link>        
+    </head>
+    <body>
+    	<section class="panel panel-warning col-md-6 col-md-offset-3">
+	        <div class="panel-head">
+		        <span th:if="${param.error}">
+		            Usuário ou senha inválidos
+		        </span>
+		        <span th:if="${param.logout}">
+		            Você deve estar deslogado.
+		        </span>
+	        </div>
+	        <div class="panel-body">
+		        <form th:action="@{/login}" method="post">
+		            <div>
+		            	<label> Usuário:  </label>
+		            	<input class="form-control" type="text" name="username" required="required"/>
+		            </div>
+		            <br /><br />
+		            <div>
+		            	<label> Senha:  </label>
+		            	<input class="form-control" type="password" name="password" required="required"/>
+		            </div>
+		            <br />
+		            <button class="btn btn-default col-xs-12" type="submit"> Entrar</button>
+		        </form>
+	        </div>
+        </section>
+    </body>
+</html>

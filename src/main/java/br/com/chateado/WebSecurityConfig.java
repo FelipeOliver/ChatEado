@@ -7,34 +7,40 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
+import br.com.chateado.services.UsuarioService;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
+	@Autowired
+	private UsuarioService usuarioService;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-		http.csrf().disable()
-			.authorizeRequests()
-			.antMatchers("/**", "**/login/**").permitAll()
-			.anyRequest().authenticated();
-//				.antMatchers("/lib/**", "/js/**", "/css/**", "/login").permitAll()
-//				.anyRequest().authenticated()
-//				.and()
-//			.formLogin()
-//				.loginPage("/login")
-//				.permitAll()
-//				.and()
-//			.logout()
-//				.logoutUrl("/logout")
-//				.permitAll()
-//				.invalidateHttpSession(true);
+//		http.csrf().disable()
+//			.authorizeRequests()
+//			.antMatchers("/**", "**/login/**").permitAll()
+//			.anyRequest().authenticated();
+
+		http
+        .authorizeRequests()
+        .antMatchers("/lib/**", "/js/**", "/css/**", "/login").permitAll()
+        .anyRequest().authenticated()
+        .and()
+        .formLogin()
+            .loginPage("/login")
+            .permitAll()
+            .and()
+        .logout()
+            .permitAll();
 	}
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER");
+//        auth
+//            .inMemoryAuthentication()
+//                .withUser("user").password("password").roles("USER");
+		auth.authenticationProvider(usuarioService);
     }
 	
 }

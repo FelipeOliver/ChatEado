@@ -7,47 +7,47 @@ app.controller('ChatController', ['$scope', '$http',
 	self.idConversa = 1;
 	self.conversasAtivas = [{'desc':'Sala 1', 'id':1}, {'desc':'Sala 2', 'id':2}];
 	
-	self.connectChat = function() {
-		if( self.userInput.codigo == undefined || self.userInput.codigo == null || self.userInput.codigo == ''){
-			alert('Informe um código de usuário');
-			return;
-		}
-		if( self.userInput.senha == undefined || self.userInput.senha == null || self.userInput.senha == ''){
-			alert('Informe uma senha para o usuário');
-			return;
-		}
-		self.user = Object.assign({}, self.userInput);
-		self.user.senha = btoa(self.user.senha);
-		self.user.idConversa = self.idConversa;
-		$http.post('/chat/login', self.user)
-    	.then(function(resp){
-    		var socket = new SockJS('/chat/chat');
-    		stompClient = Stomp.over(socket);
-    		self.setConnected(true);
-    	    stompClient.connect({}, function (frame) {
-    	    	stompClient.subscribe('/server/sendmessage/' + self.idConversa, function (greeting) {
-    	    		console.log(greeting);
-    	    		self.setMessages(JSON.parse(greeting.body));
-    	    	});
-    	    	stompClient.subscribe('/server/usuariolist/' + self.idConversa, function (list) {
-    	    		self.setUsuariosList(list.body);
-    	    	});
-    	    	stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
-    	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
-    	    	.then(function(resp){
-    	    		console.log(resp);
-    	    		self.setMessages(resp.data);
-    	    	}, function(e){
-    	    		console.log(e);
-    	    	})
-    	    	console.log('Connected: ' + frame);
-    	    });
-    	}, function(e){
-    		console.log(e);
-    		alert("O usuário não foi autenticado!");
-    	})
-
-	}
+//	self.connectChat = function() {
+//		if( self.userInput.codigo == undefined || self.userInput.codigo == null || self.userInput.codigo == ''){
+//			alert('Informe um código de usuário');
+//			return;
+//		}
+//		if( self.userInput.senha == undefined || self.userInput.senha == null || self.userInput.senha == ''){
+//			alert('Informe uma senha para o usuário');
+//			return;
+//		}
+//		self.user = Object.assign({}, self.userInput);
+//		self.user.senha = btoa(self.user.senha);
+//		self.user.idConversa = self.idConversa;
+//		$http.post('/chat/login', self.user)
+//    	.then(function(resp){
+//    		var socket = new SockJS('/chat/chat');
+//    		stompClient = Stomp.over(socket);
+//    		self.setConnected(true);
+//    	    stompClient.connect({}, function (frame) {
+//    	    	stompClient.subscribe('/server/sendmessage/' + self.idConversa, function (greeting) {
+//    	    		console.log(greeting);
+//    	    		self.setMessages(JSON.parse(greeting.body));
+//    	    	});
+//    	    	stompClient.subscribe('/server/usuariolist/' + self.idConversa, function (list) {
+//    	    		self.setUsuariosList(list.body);
+//    	    	});
+//    	    	stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
+//    	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
+//    	    	.then(function(resp){
+//    	    		console.log(resp);
+//    	    		self.setMessages(resp.data);
+//    	    	}, function(e){
+//    	    		console.log(e);
+//    	    	})
+//    	    	console.log('Connected: ' + frame);
+//    	    });
+//    	}, function(e){
+//    		console.log(e);
+//    		alert("O usuário não foi autenticado!");
+//    	})
+//
+//	}
 	
 	self.reconnectChat = function(){
 		var socket = new SockJS('/chat/chat');
@@ -61,11 +61,16 @@ app.controller('ChatController', ['$scope', '$http',
 	    	stompClient.subscribe('/server/usuariolist/' + self.idConversa, function (list) {
 	    		self.setUsuariosList(list.body);
 	    	});
-	    	stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
+	    	$http.get('/chat/conversa/entrar/' + self.idConversa +'/' + self.user.username)
+	    	.then(function(resp){
+	    		stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
+	    	}, function(e){
+	    		console.log(e);
+	    	})
 	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
 	    	.then(function(resp){
-	    		console.log(resp);
 	    		self.setMessages(resp.data);
+	    		console.log(resp);
 	    	}, function(e){
 	    		console.log(e);
 	    	})
@@ -93,17 +98,12 @@ app.controller('ChatController', ['$scope', '$http',
 	        stompClient.disconnect();
 	    }
 		self.idConversa = conv;
-	    $http.post('/chat/login/logout', self.user)
-    	.then(function(resp){
-    		self.setUsuariosList("{}");
-    		self.setMessages("{}");
-    		self.setConnected(false);
-    		console.log("Disconnected");
-    		console.log(conv);
-    		self.connectChat();
-    	}, function(e){
-    		console.log(e);
-    	})
+		self.setUsuariosList("{}");
+		self.setMessages("{}");
+		self.setConnected(false);
+		console.log("Disconnected");
+		console.log(conv);
+		self.reconnectChat();
 	}
 	
 	self.getMessages = function(id){
@@ -142,22 +142,17 @@ app.controller('ChatController', ['$scope', '$http',
 	    if (stompClient != null) {
 	        stompClient.disconnect();
 	    }
-	    $http.post('/chat/login/logout', self.user)
-    	.then(function(resp){
-    		self.setUsuariosList("{}");
-    		self.setMessages("{}");
-    		self.setConnected(false);
-    		console.log("Disconnected");
-    	}, function(e){
-    		console.log(e);
-    	})
+		self.setUsuariosList("{}");
+		self.setMessages("{}");
+		self.setConnected(false);
+		console.log("Disconnected");
 	}
 	
 	self.sendMessage = function(corpo) {
 		if(corpo == null || corpo == '' || corpo == undefined){
 			return;
 		}
-	    stompClient.send( "/app/message/" + self.idConversa, {}, JSON.stringify({'corpo': corpo, 'usuario':self.user.codigo }));
+	    stompClient.send( "/app/message/" + self.idConversa, {}, JSON.stringify({'corpo': corpo, 'usuario':self.user.username }));
 	    self.textSend = "";
 	}
 	
@@ -204,11 +199,10 @@ app.controller('ChatController', ['$scope', '$http',
 	}
 	
 	self._initUser = function(u){
+		console.log(u);
 		self.user = Object.assign({}, u);
 		self.userInput = u;
-		self.userInput.senha = atob(self.userInput.senha);
 		self.reconnectChat();
 	}
 	
-//	Notification.requestPermission();
 }])
