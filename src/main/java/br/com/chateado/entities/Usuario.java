@@ -12,13 +12,6 @@ import org.springframework.security.core.userdetails.User;
 
 public class Usuario extends User{
 	
-//	private String username;
-//	private String password;
-//	private boolean enable;
-//	private boolean accountNonExpired;
-//	private boolean credentialsNonExpired;
-//	private boolean accountNonLocked;
-//	private Set<GrantedAuthority> authorities;
 	private boolean status;
 	private Long idConversa;
 	private List<Conexao> conexoes;

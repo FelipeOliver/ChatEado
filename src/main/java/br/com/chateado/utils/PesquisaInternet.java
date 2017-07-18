@@ -12,7 +12,6 @@ public class PesquisaInternet {
     public static void main(String args[]) {  
         try {  
             final String google = "https://www.googleapis.com/customsearch/v1?key=AIzaSyC3pR_NB1eVlT24GbKPAtuBAxS5Yi9avJM&cx=017576662512468239146:omuauf_lfve&q=";  
-//             
             final String charset = "UTF-8";  
 
             URL url = new URL(google + URLEncoder.encode("cera" + "wikipedia", charset));  

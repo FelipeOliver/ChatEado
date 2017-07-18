@@ -34,4 +34,9 @@ public class Conexao {
 	public void setIdConversa(Long idConversa) {
 		this.idConversa = idConversa;
 	}
+
+	@Override
+	public String toString() {
+		return "Conexao [id=" + id + ", descricao=" + descricao + ", idConversa=" + idConversa + "]";
+	}
 }

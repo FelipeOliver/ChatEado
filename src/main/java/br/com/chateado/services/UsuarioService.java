@@ -19,8 +19,6 @@ import br.com.chateado.utils.Base64Helper;
 @Service
 public class UsuarioService implements AuthenticationProvider {
 
-//	@Autowired
-//	private UsuarioDao usuarioDao;
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	

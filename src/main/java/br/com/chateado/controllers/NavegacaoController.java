@@ -24,7 +24,6 @@ public class NavegacaoController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//			usuarioService.setStatusUsuario(usuario, "S", usuario.getIdConversa());
 			try{
 				session.setAttribute("usuario", new ObjectMapper().writeValueAsString(usuario));
 				session.setAttribute("usuarioObject", usuario);

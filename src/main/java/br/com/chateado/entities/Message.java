@@ -41,4 +41,10 @@ public class Message implements Serializable{
 	public void setDataEnvio(String dataEnvio) {
 		this.dataEnvio = dataEnvio;
 	}
+
+	@Override
+	public String toString() {
+		return "Message [id=" + id + ", titulo=" + titulo + ", corpo=" + corpo + ", usuario=" + usuario + ", dataEnvio="
+				+ dataEnvio + "]";
+	}
 }

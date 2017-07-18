@@ -17,11 +17,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	private UsuarioService usuarioService;
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{
-//		http.csrf().disable()
-//			.authorizeRequests()
-//			.antMatchers("/**", "**/login/**").permitAll()
-//			.anyRequest().authenticated();
-
 		http
         .authorizeRequests()
         .antMatchers("/lib/**", "/js/**", "/css/**", "/login").permitAll()
@@ -37,9 +32,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//        auth
-//            .inMemoryAuthentication()
-//                .withUser("user").password("password").roles("USER");
 		auth.authenticationProvider(usuarioService);
     }
 	

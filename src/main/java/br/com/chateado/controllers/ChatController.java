@@ -30,8 +30,6 @@ public class ChatController {
 	
 	@Autowired
 	private ConversaService conversaService;
-//	@Autowired
-//	private UsuarioService usuarioService;
 	@Autowired
 	private ChatBot chatBot;
 	
@@ -59,7 +57,6 @@ public class ChatController {
 	@SendTo(value="/server/usuariolist/{idConversa}")
 	public List<Usuario> changeStatus(@DestinationVariable Long idConversa){
 		List<Usuario> listUsuario = this.conversaService.findUsersOn(idConversa);
-		System.out.println(listUsuario.toString());
 		return listUsuario;
 	}
 	
@@ -77,7 +74,6 @@ public class ChatController {
 	@RequestMapping(value="/conversa/entrar/{id}/{user}")
 	public ResponseEntity<String> entrarNaConversa(@PathVariable("id") Long conversa, @PathVariable("user") String userName, HttpSession session){
 		try {
-//			usuarioService.setStatusUsuario(userName, "S", conversa);
 			conversaService.entrar(userName, conversa);
 			Usuario usuario = (Usuario) session.getAttribute("usuarioObject");
 			session.setAttribute("usuario", new ObjectMapper().writeValueAsString(usuario));
@@ -91,7 +87,6 @@ public class ChatController {
 	@RequestMapping(value="/conversa/sair/{id}/{user}")
 	public ResponseEntity<String> sairDaConversa(@PathVariable("id") Long conversa, @PathVariable("user") String userName, HttpSession session){
 		try {
-			System.out.println("Passou aqui");
 			this.conversaService.sair(userName, conversa);
 			return new ResponseEntity<String>( HttpStatus.OK );
 		} catch (Exception e) {

@@ -1,5 +1,5 @@
-app.controller('ChatController', ['$scope', '$http',
-					function($scope, $http){
+app.controller('ChatController', ['$scope', '$http', 'NotificationService',
+					function($scope, $http, NotificationService){
 	var self = this;
 	self.stompClient = null;
 	self.messages = [];
@@ -30,14 +30,14 @@ app.controller('ChatController', ['$scope', '$http',
 	    		self.stompClient.send( "/app/usuario/change/status/" + self.idConversa, {}, {})
 	    	}, function(e){
 	    		alert(e);
-	    	})
+	    	});
 	    	
 	    	$http.get('/chat/conversa/' + self.idConversa +'/findall')
 	    	.then(function(resp){
 	    		self.setMessages(resp.data);
 	    	}, function(e){
 	    		alert(e);
-	    	})
+	    	});
 	    });
 	}
 	
@@ -79,21 +79,16 @@ app.controller('ChatController', ['$scope', '$http',
     	})
 	}
 	
-	self.getMessages = function(id){
-		return self.messages;
-	}
-	
 	self.setMessages = function(messages){
 		if(messages != null && messages != undefined && messages != "{}" && messages != ""){
 			self.messages = messages;
-			$scope.$apply();
 			var mensagem = self.messages[self.messages.length - 1];    
 			var height = $("#scrollMessages")[0].scrollHeight;
 			$("#scrollMessages")[0].scrollTop = height;
 			
 			if(mensagem != null && mensagem != undefined && mensagem != ''){
 				if($.trim(mensagem.usuario) != $.trim(self.user.username)){
-					self.sendNotification(mensagem.usuario, mensagem.corpo);
+					self.sendNotification(mensagem.usuario + ": " + mensagem.corpo, 'Nova Mensagem!', null);
 				}
 			}
 		}else{
@@ -103,8 +98,10 @@ app.controller('ChatController', ['$scope', '$http',
 	
 	self.setUsuariosList = function(list){
 		if(list != null && list != undefined && list != "{}" && list != ""){
-			self.usersOn = JSON.parse(list);
-			$scope.$apply();
+			$scope.$apply(function(){
+				self.usersOn = JSON.parse(list);
+			});
+//			$scope.$apply();
 		}else{
 			self.usersOn = [];
 		}
@@ -144,36 +141,8 @@ app.controller('ChatController', ['$scope', '$http',
 		}
 	}
 	
-	self.sendNotification = function(usuario, corpo){
-	    if(window.webkitNotifications != undefined && window.webkitNotifications != null && window.webkitNotifications != '' ){
-		    var havePermission = window.webkitNotifications.checkPermission();
-		    if (havePermission == 0) {
-		      var notification = window.webkitNotifications.createNotification(
-		        '/chat/css/img/messages5.png',
-		        'Nova Mensagem!',
-		        usuario + ": " + corpo
-		      );
-	
-		      notification.onclick = function () {
-		    	window.focus();
-		        notification.close();
-		      }
-		      notification.show();
-		    } else {
-		        window.webkitNotifications.requestPermission();
-		    }
-	    }else{
-		    Notification.requestPermission(function() {
-		        var notification = new Notification("Nova Mensagem!", {
-				    icon: '/chat/css/img/messages5.png',
-				    body: usuario + ": " + corpo
-				});
-		        notification.onclick = function() {
-		        	window.focus();
-		        	notification.close();
-		        }
-		    });	    		
-	    }		
+	self.sendNotification = function(corpo, titulo, imagem){
+		NotificationService.send(corpo, titulo, imagem);
 	}
 	
 	self._initUser = function(u){
