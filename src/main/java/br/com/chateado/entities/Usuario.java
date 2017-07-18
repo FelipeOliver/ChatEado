@@ -4,11 +4,24 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 public class Usuario extends User{
+	
+//	private String username;
+//	private String password;
+//	private boolean enable;
+//	private boolean accountNonExpired;
+//	private boolean credentialsNonExpired;
+//	private boolean accountNonLocked;
+//	private Set<GrantedAuthority> authorities;
+	private boolean status;
+	private Long idConversa;
+	private List<Conexao> conexoes;
 	
 	public Usuario(String username, String password, boolean enabled, boolean accountNonExpired,
 			boolean credentialsNonExpired, boolean accountNonLocked,
@@ -20,26 +33,7 @@ public class Usuario extends User{
 	}
 	private static final long serialVersionUID = 1L;
 	
-	//	private String codigo;
-	//	private String senha;
-	private boolean status;
-	private Long idConversa;
-	private List<Conexao> conexoes;
 	
-//	public Usuario(String codigo, String senha, String status) {
-//		this.setCodigo(codigo);
-//		this.setSenha(senha);
-//		this.setStatusString(status);
-//	}
-//	public Usuario(){
-//		
-//	}
-//	public String getCodigo() {
-//		return codigo;
-//	}
-//	public void setCodigo(String codigo) {
-//		this.codigo = codigo;
-//	}
 	public boolean getStatus() {
 		return status;
 	}
@@ -49,12 +43,6 @@ public class Usuario extends User{
 	public void setStatus(boolean status){
 		this.status = status;
 	}
-//	public String getSenha() {
-//		return senha;
-//	}
-//	public void setSenha(String senha) {
-//		this.senha = senha;
-//	}
 	public Long getIdConversa() {
 		return idConversa;
 	}
@@ -67,5 +55,13 @@ public class Usuario extends User{
 	public void setConexoes(List<Conexao> conexoes) {
 		this.conexoes = conexoes;
 	}
-
+	@Id
+	@Field
+	public String getUsername(){
+		return super.getUsername();
+	}
+	@Field
+	public String getPassword(){
+		return super.getPassword();
+	}
 }

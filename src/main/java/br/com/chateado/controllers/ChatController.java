@@ -21,10 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.chateado.entities.Message;
 import br.com.chateado.entities.Usuario;
-import br.com.chateado.repositories.UsuarioDao;
 import br.com.chateado.services.ChatBot;
 import br.com.chateado.services.ConversaService;
-import br.com.chateado.services.UsuarioService;
 
 @Controller
 @CrossOrigin
@@ -32,8 +30,8 @@ public class ChatController {
 	
 	@Autowired
 	private ConversaService conversaService;
-	@Autowired
-	private UsuarioService usuarioService;
+//	@Autowired
+//	private UsuarioService usuarioService;
 	@Autowired
 	private ChatBot chatBot;
 	
@@ -60,8 +58,8 @@ public class ChatController {
 	@MessageMapping(value="/usuario/change/status/{idConversa}")
 	@SendTo(value="/server/usuariolist/{idConversa}")
 	public List<Usuario> changeStatus(@DestinationVariable Long idConversa){
-		System.out.println("Passou aqui");
-		List<Usuario> listUsuario = UsuarioDao.findListByIdConversa(idConversa);
+		List<Usuario> listUsuario = this.conversaService.findUsersOn(idConversa);
+		System.out.println(listUsuario.toString());
 		return listUsuario;
 	}
 	
@@ -79,9 +77,22 @@ public class ChatController {
 	@RequestMapping(value="/conversa/entrar/{id}/{user}")
 	public ResponseEntity<String> entrarNaConversa(@PathVariable("id") Long conversa, @PathVariable("user") String userName, HttpSession session){
 		try {
-			usuarioService.setStatusUsuario(userName, "S", conversa);
+//			usuarioService.setStatusUsuario(userName, "S", conversa);
+			conversaService.entrar(userName, conversa);
 			Usuario usuario = (Usuario) session.getAttribute("usuarioObject");
 			session.setAttribute("usuario", new ObjectMapper().writeValueAsString(usuario));
+			return new ResponseEntity<String>( HttpStatus.OK );
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@RequestMapping(value="/conversa/sair/{id}/{user}")
+	public ResponseEntity<String> sairDaConversa(@PathVariable("id") Long conversa, @PathVariable("user") String userName, HttpSession session){
+		try {
+			System.out.println("Passou aqui");
+			this.conversaService.sair(userName, conversa);
 			return new ResponseEntity<String>( HttpStatus.OK );
 		} catch (Exception e) {
 			e.printStackTrace();

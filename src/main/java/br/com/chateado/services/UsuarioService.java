@@ -13,22 +13,35 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import br.com.chateado.entities.Usuario;
-import br.com.chateado.repositories.UsuarioDao;
+import br.com.chateado.repositories.UsuarioRepository;
 import br.com.chateado.utils.Base64Helper;
 
 @Service
 public class UsuarioService implements AuthenticationProvider {
 
+//	@Autowired
+//	private UsuarioDao usuarioDao;
 	@Autowired
-	private UsuarioDao usuarioDao;
+	private UsuarioRepository usuarioRepository;
 	
-//	public boolean validaUsuario(Usuario usuario) {
 	public boolean validaUsuario(String username, String password) {
-		return usuarioDao.existsByCodigoAndSenha(username, password);
+		Usuario usuario = findOne(username);
+		if(usuario != null){
+			return usuario.getPassword().equals(password) && !usuario.getStatus();
+		}else{
+			return false;
+		}
+	}
+	
+	public Usuario findOne(String usuario){
+		return this.usuarioRepository.findByUsername(usuario);
 	}
 
-	public void setStatusUsuario(String usuario, String status, Long idConversa) {
-		usuarioDao.setStatus(usuario, status, idConversa);
+	public void setStatusUsuario(String username, String status, Long idConversa) {
+		Usuario usuario = findOne(username);
+		usuario.setStatus("S".equalsIgnoreCase(status));
+		usuario.setIdConversa(idConversa);
+		this.usuarioRepository.save(usuario);
 	}
 
 	public Authentication authenticate( Authentication authentication ) throws AuthenticationException {
@@ -44,7 +57,7 @@ public class UsuarioService implements AuthenticationProvider {
 	    System.out.println("O Usuario existe? " + validaUsuario);
         if (validaUsuario) {
 	        Collection<GrantedAuthority> grantedAuths = Arrays.asList(new SimpleGrantedAuthority(role.trim()));
-	        Usuario appUser = usuarioDao.findUser(userName);
+	        Usuario appUser = findOne(userName);
 	        auth = new UsernamePasswordAuthenticationToken(appUser, password, grantedAuths);
 	        return auth;
         } else {
@@ -56,4 +69,8 @@ public class UsuarioService implements AuthenticationProvider {
     public boolean supports(Class<? extends Object> authentication) {
         return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
     }
+
+	public void save(Usuario usuario) {
+		this.usuarioRepository.save(usuario);
+	}
 }

@@ -8,11 +8,11 @@
 		</div>
 		<a th:href="@{/login}">Logout</a>
 		<div class="panel panel-default col-md-6 col-md-offset-3 col-xs-12" style="margin-bottom: 0px">
-			<div class="panel-head">
+			<div class="panel-head" data-ng-show="cc.conversasAtivas.length > 0">
 				<ul class="nav nav-tabs">
 					<li role="" data-ng-repeat="conv in cc.conversasAtivas" 
-						 data-ng-class="cc.idConversa == conv.id ? 'active' : ''">
-						<a data-ng-click="cc.setConversation(conv.id)"> {{ conv.desc }} </a>
+						 data-ng-class="cc.idConversa == conv.idConversa ? 'active' : ''">
+						<a data-ng-click="cc.setConversation(conv)"> {{ conv.descricao }} </a>
 					</li>
 					<li class="pull-right" data-ng-show="cc.idConversa">
 						<button data-ng-click="cc.closeConversation(cc.idConversa)" type="button" class="close text-danger">
@@ -103,8 +103,8 @@
 			</div>
 			<div class="panel-body">
 				<ul>
-					<li data-ng-repeat="uo in cc.usersOn">
-						<span data-ng-bind="uo.username"></span> <span data-ng-bind="uo.status ? 'On' : 'Off'"></span>
+					<li  class="text-success" data-ng-repeat="uo in cc.usersOn">
+						<span data-ng-bind="uo.username"></span>
 					</li>
 				</ul>
 			</div>
@@ -114,8 +114,8 @@
 			</div>
 			<div class="panel-body">
 				<ul>
-					<li data-ng-repeat="conv in cc.conversasAtivas">
-						<a data-ng-click="cc.setConversation(conv.id)"><span data-ng-bind="conv.desc"></span></a>
+					<li data-ng-repeat="conv in cc.user.conexoes">
+						<a data-ng-click="cc.setConversation(conv)"><span data-ng-bind="conv.descricao"></span></a>
 					</li>
 				</ul>
 			</div>			
